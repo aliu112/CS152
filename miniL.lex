@@ -38,6 +38,7 @@ LETTERS [A-Za-z]
 "not"       	{printf("NOT\n"); currPos += yyleng;}
 "true"       	{printf("TRUE\n"); currPos += yyleng;}
 "false"       	{printf("FALSE\n"); currPos += yyleng;}
+"return"       {printf("RETURN\n"); currPos += yyleng;}
 "-"		   {printf("SUB\n"); currPos += yyleng;}
 "+"		   {printf("ADD\n"); currPos += yyleng;}
 "*"		   {printf("MULT\n"); currPos += yyleng;}
@@ -58,6 +59,8 @@ LETTERS [A-Za-z]
 "]"         {printf("R_SQUARE_BRACKET\n");currPos += yyleng;}
 ":="        {printf("ASSIGN\n");currPos += yyleng;}
 
+
+
 [ \t]+      {/* ignore spaces */  currPos+=yyleng;}
 
 "##".       {/* ignore comments */  currPos+=yyleng;}
@@ -66,11 +69,11 @@ LETTERS [A-Za-z]
 
 {DIGIT}+    {printf("NUMBER %s\n", yytext); currPos += yyleng;}
 
-{LETTERS}+({LETTERS}|{DIGIT}|[_]])*(({LETTERS}|{DIGIT})+)*        {printf("IDENT %s\n", yytext); currPos += yyleng;}
+{LETTERS}(({LETTERS}|{DIGIT}|[_])*({LETTERS}|{DIGIT}))        {printf("IDENT %s\n", yytext); currPos += yyleng;}
 
-([_]|{DIGIT})+({LETTERS}|{DIGIT}|[_]])*(({LETTERS}|{DIGIT})+)*    {printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); exit(0);}
+([_]|{DIGIT})({LETTERS}|{DIGIT}|[_]])*(({LETTERS}|{DIGIT}))*    {printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); exit(0);}
 
-{LETTERS}+({LETTERS}|{DIGIT}|[_]])*[_]+                           {printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); exit(0);}
+{LETTERS}([_]|{LETTERS}|{DIGIT})*[_]                           {printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); exit(0);}
 
 
 
